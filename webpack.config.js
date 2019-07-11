@@ -20,7 +20,7 @@ module.exports = {
             })
         ]
     },
-    mode: 'production',  //默认  development   production
+    mode: 'development',  //默认  development   production
     entry: './src/index.js',  //入口
     output: {
         filename: 'bundle.[hash:8].js', //打包后的文件名
