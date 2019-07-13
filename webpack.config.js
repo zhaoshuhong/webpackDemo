@@ -1,8 +1,9 @@
 let path = require('path');
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let MiniCssExtractPlugin = require('mini-css-extract-plugin');
-let OptimizeCss = require('optimize-css-assets-webpack-plugin');
-let UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+let HtmlWebpackPlugin = require('html-webpack-plugin');  //html模板插件
+let MiniCssExtractPlugin = require('mini-css-extract-plugin'); //css 压缩简化插件
+let OptimizeCss = require('optimize-css-assets-webpack-plugin');   //css 分离插件
+let UglifyJsPlugin = require('uglifyjs-webpack-plugin');    //分离后js 压缩插件
+let webpack = require('webpack');
 module.exports = {
     devServer: {   // 开发服务器配置
         port: 3000,   //端口号
@@ -38,10 +39,22 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: 'main.css'
-        })
+        }),
+        // new webpack.ProvidePlugin({  //在每个模块内注入jquery
+        //     $:'jquery'
+        // })      
     ],
+
+    externals: {
+        jquery: '$'    //外部引入 不打包  cdn
+    },
     module: {  //模块
         rules: [
+            // {
+            //     test: require.resolve('jquery'),
+            //     use: 'expose-loader?$'
+            // },       //暴露到window上
+
             // {
             //     test: /\.js$/,
             //     use: {
@@ -50,7 +63,7 @@ module.exports = {
             //             enforce:'pre'   //之前执行  post 之后
             //         }
             //     },
-               
+
             // },
             {
                 test: /\.js$/,
