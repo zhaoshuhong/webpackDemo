@@ -14,23 +14,13 @@ require('./index.css');
 // import $ from 'jquery';
 
 // expose-loader 暴露全局的loader
-// console.log(window.$);
+console.log(window.$);
 
 //webpacck 打包图片
 // 1)在js中 创建图片来引入
 // 2)css 中可以直接引入
-// import logo from './1.png';
-// console.log(logo);
-// console.log('1111')
-// let image = new Image();
-// image.src = logo;
-// document.body.appendChild(image);
-
-
-let xhr = new XMLHttpRequest();
-xhr.open('GET','/api/user',true);
-xhr.onload = function(){
-    console.log(xhr.response);
-
-}
-xhr.send();
+import logo from './1.png';
+console.log(logo);
+let image = new Image();
+image.src = logo;
+document.body.appendChild(image);
