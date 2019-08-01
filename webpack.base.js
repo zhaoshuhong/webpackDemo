@@ -83,6 +83,12 @@ module.exports = {
         new CopyWebpackPlugin(
             [{ from: 'static', to: './' }]  //拷贝插件
         ),
+    new webpack.DefinePlugin({   //定义环境变量
+        DEV:"'dev'",
+        ST:JSON.stringify('production'),
+        FLAG:'true',
+        EXPORESSION:'1+1'
+    }),
         // new webpack.ProvidePlugin({  //在每个模块内注入jquery
         //     $:'jquery'
         // })      
@@ -90,6 +96,17 @@ module.exports = {
 
     externals: {
         jquery: '$'    //外部引入 不打包  cdn
+    },
+    resolve:{   //解析第三方包
+        modules:[path.resolve('node_modules')],
+        // alias:{
+        //     bootstrapcss:'bootstrap/dist/css/bootstrap.css'
+        // },
+        // mainFields:['style','main'],
+        // mainFiles:[],  //入口文件的名字  默认index.js
+        extensions:['.js','.css','.json','.vue']
+
+
     },
     module: {  //模块
         rules: [

@@ -1,3 +1,12 @@
+import 'bootstrap';
+
+let url = 'cehsi';
+if(DEV == 'dev'){
+    console.log('dev')
+}else{
+    console.log('pro')
+}
+
 // let str = require('./a.js');
 require('./index.css');
 // require('./index.less');
