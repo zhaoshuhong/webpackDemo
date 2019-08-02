@@ -89,6 +89,7 @@ module.exports = {
         FLAG:'true',
         EXPORESSION:'1+1'
     }),
+    new webpack.IgnorePlugin(/\.\/locale/,/moment/),    //忽略 插件
         // new webpack.ProvidePlugin({  //在每个模块内注入jquery
         //     $:'jquery'
         // })      
@@ -109,6 +110,7 @@ module.exports = {
 
     },
     module: {  //模块
+        noParse:'/jquery/',   //不去解析jq中的依赖
         rules: [
 
             {
