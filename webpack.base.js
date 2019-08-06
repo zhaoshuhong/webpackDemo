@@ -3,24 +3,26 @@ let HtmlWebpackPlugin = require('html-webpack-plugin');  //html模板插件
 let MiniCssExtractPlugin = require('mini-css-extract-plugin'); //css 压缩简化插件
 let OptimizeCss = require('optimize-css-assets-webpack-plugin');   //css 分离插件
 let UglifyJsPlugin = require('uglifyjs-webpack-plugin');    //分离后js 压缩插件
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');   //清除build的文件重新build 
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');   //清除build的文件重新build
 let CopyWebpackPlugin = require('copy-webpack-plugin');
 let webpack = require('webpack');
+//webpack 优化
+let HappyPack = require('happypack');   //开启多线程;
 module.exports = {
     devServer: {   // 开发服务器配置
         port: 3000,   //端口号
         progress: true,  //进度条
         contentBase: './build',   //静态服务的基础目录
         compress: true,      //zip压缩
-        proxy:{ //请求代理
-            'api':{
-                target:'http://localhost:3000',
-                pathRewrite:{'/api':''}
+        proxy: { //请求代理
+            'api': {
+                target: 'http://localhost:3000',
+                pathRewrite: {'/api': ''}
             }
         },
         before(app){
-            app.get('/api/user',(req,res)=>{
-                res.json({name:'ceshi'})
+            app.get('/api/user', (req, res) => {
+                res.json({name: 'ceshi'})
             })
         }
 
@@ -81,36 +83,55 @@ module.exports = {
         new CleanWebpackPlugin(),
         new webpack.BannerPlugin('make 2019/7/28 by zsh'),   //版权声明插件
         new CopyWebpackPlugin(
-            [{ from: 'static', to: './' }]  //拷贝插件
+            [{from: 'static', to: './'}]  //拷贝插件
         ),
-    new webpack.DefinePlugin({   //定义环境变量
-        DEV:"'dev'",
-        ST:JSON.stringify('production'),
-        FLAG:'true',
-        EXPORESSION:'1+1'
-    }),
-    new webpack.IgnorePlugin(/\.\/locale/,/moment/),    //忽略 插件
+        new webpack.DefinePlugin({   //定义环境变量
+            DEV: "'dev'",
+            ST: JSON.stringify('production'),
+            FLAG: 'true',
+            EXPORESSION: '1+1'
+        }),
+        new webpack.IgnorePlugin(/\.\/locale/, /moment/),    //忽略 插件
         // new webpack.ProvidePlugin({  //在每个模块内注入jquery
         //     $:'jquery'
-        // })      
+        // }),
+        new webpack.DllReferencePlugin({
+            manifest:path.resolve(__dirname,'build','manifest.json')    //解析任务列表
+        }),
+        // new HappyPack({
+        //     id:'js',
+        //     use:[{
+        //         loader: 'babel-loader',
+        //         options: {       //用babel-loader  需要把es6-es5
+        //             presets: [
+        //                 '@babel/preset-env'
+        //             ],
+        //             plugins: [
+        //                 ['@babel/plugin-proposal-decorators', {'legacy': true}],
+        //                 ['@babel/plugin-proposal-class-properties', {'loose': true}],
+        //                 '@babel/plugin-transform-runtime'
+        //             ]
+        //         }
+        //     }]
+        // })
     ],
 
     externals: {
         jquery: '$'    //外部引入 不打包  cdn
     },
-    resolve:{   //解析第三方包
-        modules:[path.resolve('node_modules')],
+    resolve: {   //解析第三方包
+        modules: [path.resolve('node_modules')],
         // alias:{
         //     bootstrapcss:'bootstrap/dist/css/bootstrap.css'
         // },
         // mainFields:['style','main'],
         // mainFiles:[],  //入口文件的名字  默认index.js
-        extensions:['.js','.css','.json','.vue']
+        extensions: ['.js', '.css', '.json', '.vue']
 
 
     },
     module: {  //模块
-        noParse:'/jquery/',   //不去解析jq中的依赖
+        noParse: '/jquery/',   //不去解析jq中的依赖
         rules: [
 
             {
@@ -148,6 +169,7 @@ module.exports = {
             // },
             {
                 test: /\.js$/,
+                // use:'Happypack/loader?id=js',   //开启多线程打包 方式
                 use: {
                     loader: 'babel-loader',
                     options: {       //用babel-loader  需要把es6-es5
@@ -155,8 +177,8 @@ module.exports = {
                             '@babel/preset-env'
                         ],
                         plugins: [
-                            ['@babel/plugin-proposal-decorators', { 'legacy': true }],
-                            ['@babel/plugin-proposal-class-properties', { 'loose': true }],
+                            ['@babel/plugin-proposal-decorators', {'legacy': true}],
+                            ['@babel/plugin-proposal-class-properties', {'loose': true}],
                             '@babel/plugin-transform-runtime'
                         ]
                     }
