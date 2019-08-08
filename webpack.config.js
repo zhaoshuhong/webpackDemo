@@ -35,7 +35,24 @@ module.exports = {
                 parallel: true,   //并发打包
                 sourceMap: true
             })
-        ]
+        ],
+        splitChunks:{ //分割代码块
+            cacheGroups:{   //缓存组件
+                common:{    //公共的模块
+                    chunks:'initial',
+                    minSize:0,
+                    minChunks:2,
+                },
+                vendor:{
+                    priority:1,
+                    test:/node_modules/,   //把你抽离出来
+                    chunks:'initial',
+                    minSize:0,
+                    minChunks:2,
+                }
+
+            }
+        }
     },
     devtool: 'source-map',
     // watch:true,
@@ -91,14 +108,16 @@ module.exports = {
             FLAG: 'true',
             EXPORESSION: '1+1'
         }),
+        new webpack.HotModuleReplacementPlugin(),   // 热更新插件
+        new webpack.NamedModulesPlugin(), //打印更新的模块路径
         new webpack.IgnorePlugin(/\.\/locale/, /moment/),    //忽略 插件
         // new webpack.ProvidePlugin({  //在每个模块内注入jquery
         //     $:'jquery'
         // }),
-        new webpack.DllReferencePlugin({
-            manifest:path.resolve(__dirname,'build','manifest.json')    //解析任务列表
-        }),
-        // new HappyPack({
+        // new webpack.DllReferencePlugin({
+        //     manifest:path.resolve(__dirname,'build','manifest.json')    //解析任务列表
+        // }),
+        // new HappyPack({webpack -p --config
         //     id:'js',
         //     use:[{
         //         loader: 'babel-loader',
@@ -179,7 +198,8 @@ module.exports = {
                         plugins: [
                             ['@babel/plugin-proposal-decorators', {'legacy': true}],
                             ['@babel/plugin-proposal-class-properties', {'loose': true}],
-                            '@babel/plugin-transform-runtime'
+                            '@babel/plugin-transform-runtime',
+                            '@babel/plugin-syntax-dynamic-import'   //懒加载 插件
                         ]
                     }
                 },

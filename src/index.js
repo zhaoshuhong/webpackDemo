@@ -1,4 +1,4 @@
-import 'bootstrap';
+// import 'bootstrap';
 
 let url = 'cehsi';
 if(DEV == 'dev'){
@@ -35,6 +35,12 @@ require('./index.css');
 // image.src = logo;
 // document.body.appendChild(image);
 
+
+
+// 懒加载 方法
+import('./source.js').then(data=>{
+    console.log('调用懒加载',data.default);
+})
 
 let xhr = new XMLHttpRequest();
 xhr.open('GET','/api/user',true);
