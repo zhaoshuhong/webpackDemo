@@ -1,3 +1,2 @@
 # webpackDemo
-## webpack 通用模板
-``ceshi``
+## webpack 通用模板1
